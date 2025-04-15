@@ -1,22 +1,28 @@
 pipeline {
     agent any
     stages {
-        stage('Clone Code') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/krishn1250/HELLO.git'
+                git branch: 'main', url: 'https://github.com/krishn1250/HELLO.git'
             }
         }
         stage('Build') {
             steps {
-                echo "✅ Building the project..."
-                // sh './gradlew build' OR 'mvn clean install' based on your project
+                sh 'mvn clean install'  // If you're using Maven for building the project
             }
         }
         stage('Test') {
             steps {
-                echo "🧪 Running tests..."
-                // sh './gradlew test'
+                sh 'mvn test'  // Running tests if available
             }
+        }
+    }
+    post {
+        success {
+            echo 'Build and tests passed!'
+        }
+        failure {
+            echo 'Build or tests failed.'
         }
     }
 }
